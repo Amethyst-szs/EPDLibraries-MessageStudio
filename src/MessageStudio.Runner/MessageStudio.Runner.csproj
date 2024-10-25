@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MessageStudio\MessageStudio.csproj" />
+    <ProjectReference Include="..\MessageStudio\Nindot.MessageStudio.csproj" />
   </ItemGroup>
 
 </Project>

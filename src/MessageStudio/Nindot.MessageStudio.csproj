@@ -7,6 +7,9 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <NoWarn>8500</NoWarn>
     <PackageReadmeFile>Readme.md</PackageReadmeFile>
+    <PackageLicenseFile>License.md</PackageLicenseFile>
+    <PackageVersion>1.0.1</PackageVersion>
+    <PackageProjectUrl>https://github.com/Amethyst-szs/EPDLibraries-MessageStudio</PackageProjectUrl>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,6 +21,13 @@
 
   <ItemGroup>
   	<None Include="../../Readme.md" Link="Assets\Readme.md">
+  	  <Pack>True</Pack>
+  	  <PackagePath>\</PackagePath>
+  	</None>
+  </ItemGroup>
+
+  <ItemGroup>
+  	<None Include="../../License.md" Link="Assets\License.md">
   	  <Pack>True</Pack>
   	  <PackagePath>\</PackagePath>
   	</None>
