@@ -53,7 +53,7 @@ public class Msbt : Dictionary<string, MsbtEntry>
                     case MsbtDuplicateKeyMode.UseLastOccurrence: {
                         managed[key] = new MsbtEntry {
                             Attribute = msbt.AttributeSectionReader[index].GetManaged(),
-                            Text = msbt.TextSectionReader[index].GetManaged(),
+                            Text = msbt.TextSectionReader[index].GetManaged(options),
                             TextBuffer = msbt.TextSectionReader[index].Buffer.ToArray()
                         };
 
@@ -62,7 +62,7 @@ public class Msbt : Dictionary<string, MsbtEntry>
                     default: {
                         bool keySuccessfullyAdded = managed.TryAdd(key, new MsbtEntry {
                             Attribute = msbt.AttributeSectionReader[index].GetManaged(),
-                            Text = msbt.TextSectionReader[index].GetManaged(),
+                            Text = msbt.TextSectionReader[index].GetManaged(options),
                             TextBuffer = msbt.TextSectionReader[index].Buffer.ToArray()
                         });
 

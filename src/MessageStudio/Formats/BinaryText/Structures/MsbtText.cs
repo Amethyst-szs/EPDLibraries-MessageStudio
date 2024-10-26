@@ -18,8 +18,11 @@ public readonly ref struct MsbtText(Span<byte> buffer, TextEncoding encoding)
         return MemoryMarshal.Cast<byte, char>(Buffer[..^2]);
     }
 
-    public readonly string? GetManaged()
+    public readonly string? GetManaged(MsbtOptions? opt)
     {
+        if (opt != null && !opt.IsGenerateTextStrings)
+            return "";
+        
         StringBuilder sb = new();
         if (Encoding == TextEncoding.UTF8) {
             WriteUtf8(sb);
