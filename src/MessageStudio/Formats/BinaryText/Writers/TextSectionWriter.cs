@@ -1,7 +1,7 @@
 ﻿using MessageStudio.Common;
 using MessageStudio.Formats.BinaryText.Extensions;
 using Revrs;
-using System.Runtime.CompilerServices;
+using System.Collections.Immutable;
 
 namespace MessageStudio.Formats.BinaryText.Writers;
 
@@ -38,6 +38,39 @@ internal static class TextSectionWriter
         writer.Seek(sectionEndPosition);
     }
 
+    public static void WriteByte(ref RevrsWriter writer, TextEncoding encoding, byte[][] entries)
+    {
+        long sectionOffset = writer.Position;
+
+        writer.Write(entries.Length);
+
+        int firstOffset = entries.Length * sizeof(uint) + sizeof(uint);
+
+        long offsetsPosition = writer.Position;
+        writer.Move(firstOffset - sizeof(uint));
+
+        Span<long> offsets = entries.Length * sizeof(long) < 0xF0000
+            ? stackalloc long[entries.Length] : new long[entries.Length];
+
+        for (int i = 0; i < entries.Length; i++) {
+            writer.Write(entries[i]);
+            AppendNullTerminator(ref writer, encoding);
+            
+            offsets[i] = writer.Position - firstOffset - sectionOffset;
+        }
+
+        long sectionEndPosition = writer.Position;
+        int relativeOffsetCount = entries.Length - 1;
+
+        writer.Seek(offsetsPosition);
+        writer.Write(firstOffset);
+        for (int i = 0; i < relativeOffsetCount; i++) {
+            writer.Write((uint)(offsets[i] + firstOffset));
+        }
+
+        writer.Seek(sectionEndPosition);
+    }
+
     private static void WriteEntry(ref RevrsWriter writer, ReadOnlySpan<char> text, TextEncoding encoding)
     {
         for (int i = 0; i < text.Length; i++) {
@@ -52,6 +85,11 @@ internal static class TextSectionWriter
             }
         }
 
+        AppendNullTerminator(ref writer, encoding);
+    }
+
+    private static void AppendNullTerminator(ref RevrsWriter writer, TextEncoding encoding)
+    {
         switch (encoding) {
             case TextEncoding.UTF8:
                 writer.Write<byte>(0);
